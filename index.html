@@ -1,0 +1,351 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Nima pishirsam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Onest:wght@400..700&display=swap">
+<style>
+/* Layout: one-column phone app. Screen 1 = product chips by category with a fixed "Ko'rish" bar. Screen 2 = dish cards with match meter. */
+:root{
+  --bg:#F2F7F6; --surface:#FFFFFF; --fg:#0F2629; --muted:#587074; --line:#D3E1DF;
+  --accent:#0E7A84; --accent-fg:#FFFFFF; --accent-soft:#D8EFEC; --saffron:#E3A41D;
+  --ok:#1C7448; --ok-soft:#DCF2E4; --warn:#9A4A06; --warn-soft:#FBE9D0;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1B1E; --surface:#112A2E; --fg:#E5F1EF; --muted:#93B0B2; --line:#21434A;
+    --accent:#3CC0CA; --accent-fg:#04252A; --accent-soft:#143A40; --saffron:#EDB43A;
+    --ok:#74D9A0; --ok-soft:#133826; --warn:#F3B472; --warn-soft:#3B2914; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1B1E; --surface:#112A2E; --fg:#E5F1EF; --muted:#93B0B2; --line:#21434A;
+  --accent:#3CC0CA; --accent-fg:#04252A; --accent-soft:#143A40; --saffron:#EDB43A;
+  --ok:#74D9A0; --ok-soft:#133826; --warn:#F3B472; --warn-soft:#3B2914; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.orn{height:10px;background:
+  linear-gradient(135deg,var(--saffron) 25%,transparent 25%) -10px 0/20px 10px,
+  linear-gradient(225deg,var(--saffron) 25%,transparent 25%) -10px 0/20px 10px,
+  linear-gradient(315deg,var(--saffron) 25%,transparent 25%) 0 0/20px 10px,
+  linear-gradient(45deg,var(--saffron) 25%,transparent 25%) 0 0/20px 10px;
+  background-color:var(--accent)}
+.hero .wrap{padding-top:20px;padding-bottom:14px}
+h1{font-family:var(--display);font-weight:800;font-size:2.1rem;line-height:1.05;margin:0 0 8px;letter-spacing:-.02em;text-wrap:balance}
+.lead{margin:0;color:var(--muted);max-width:46ch}
+.lead b{color:var(--fg);font-weight:600}
+
+/* sticky toolbar */
+.tools{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tools .wrap{padding-top:10px;padding-bottom:10px;display:flex;flex-direction:column;gap:10px}
+.search{width:100%;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:0 14px;min-width:0}
+.search::placeholder{color:var(--muted)}
+.nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.nav::-webkit-scrollbar{display:none}
+.navbtn{flex:none;border:0;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:13px;padding:7px 12px;border-radius:999px}
+:root[data-theme="dark"] .navbtn{color:var(--accent)}
+
+main{padding-bottom:120px}
+.sec{scroll-margin-top:130px;padding-top:20px}
+.sec h2{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--display);font-size:1.15rem;font-weight:700;margin:0 0 10px;letter-spacing:-.01em}
+.sec h2 small{font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:8px 13px;border:1px solid var(--line);background:var(--surface);border-radius:999px;transition:background .15s,border-color .15s}
+.chip .em{font-size:17px;line-height:1}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.chip[hidden]{display:none!important}
+.empty{color:var(--muted);padding:28px 0;text-align:center}
+
+/* bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  display:flex;align-items:center;gap:12px}
+.bar .info{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
+.bar .info b{font-family:var(--display);font-size:1.05rem}
+.linkbtn{border:0;background:none;color:var(--muted);padding:2px 0;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.primary{border:0;background:var(--accent);color:var(--accent-fg);font-family:var(--display);font-weight:700;font-size:1.05rem;padding:14px 22px;border-radius:14px;min-height:50px;white-space:nowrap}
+.primary:disabled{opacity:.4;cursor:not-allowed}
+
+/* results */
+.rtop{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.rtop .wrap{padding-top:10px;padding-bottom:10px;display:flex;flex-direction:column;gap:10px}
+.back{align-self:flex-start;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px}
+.rtitle{font-family:var(--display);font-weight:800;font-size:1.6rem;letter-spacing:-.02em;margin:0}
+.mine{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.mine::-webkit-scrollbar{display:none}
+.mine span{flex:none;font-size:12px;padding:4px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--accent-soft);border-radius:12px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:9px 4px;font-weight:600;font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg button span{font-variant-numeric:tabular-nums;margin-left:3px;opacity:.8}
+.tags{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.tags::-webkit-scrollbar{display:none}
+.tag{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px}
+.tag[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600;background:var(--accent-soft)}
+.list{display:flex;flex-direction:column;gap:12px;padding-top:16px;padding-bottom:40px}
+.dish{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.dhead{width:100%;border:0;background:none;text-align:left;padding:14px;display:flex;flex-direction:column;gap:10px}
+.drow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dname{font-family:var(--display);font-weight:700;font-size:1.15rem;line-height:1.2;margin:0;min-width:0}
+.pill{flex:none;font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--muted)}
+.meter{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.track{flex:1;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:var(--accent);border-radius:99px}
+.fill.full{background:var(--ok)}
+.chev{display:inline-block;transition:transform .2s;color:var(--muted)}
+.dhead[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.dbody{padding:0 14px 16px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:14px}
+.dbody h4{margin:14px 0 8px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.ings{display:flex;flex-wrap:wrap;gap:6px}
+.ing{font-size:13px;padding:5px 10px;border-radius:8px;border:1px solid var(--line)}
+.ing.have{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.ing.miss{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.ing.opt{border-style:dashed;color:var(--muted)}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:26px 1fr;gap:10px;min-width:0}
+.steps li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:13px;font-weight:700;font-family:var(--display)}
+.hint{color:var(--muted);font-size:13px;text-align:center;padding:4px 0 24px}
+</style>
+
+<div id="pick">
+  <header class="hero">
+    <div class="orn"></div>
+    <div class="wrap">
+      <h1>Nima pishirsam?</h1>
+      <p class="lead">Uyingizda bor mahsulotlarni belgilang, keyin <b>Ko'rish</b> tugmasini bosing. Tuz, suv va o'simlik yog'i bor deb hisoblanadi.</p>
+    </div>
+  </header>
+  <div class="tools">
+    <div class="wrap">
+      <input id="q" class="search" type="search" placeholder="Mahsulot qidirish, masalan: sabzi" autocomplete="off" aria-label="Mahsulot qidirish">
+      <div class="nav" id="nav"></div>
+    </div>
+  </div>
+  <main class="wrap" id="cats"></main>
+  <div class="bar">
+    <div class="info">
+      <b id="cnt">Hech narsa tanlanmagan</b>
+      <button class="linkbtn" id="clear" type="button" hidden>Tozalash</button>
+    </div>
+    <button class="primary" id="go" type="button" disabled>Ko'rish</button>
+  </div>
+</div>
+
+<div id="results" hidden>
+  <div class="orn"></div>
+  <div class="rtop">
+    <div class="wrap">
+      <button class="back" id="back" type="button">← Mahsulotlarni o'zgartirish</button>
+      <h2 class="rtitle" id="rtitle">Mos ovqatlar</h2>
+      <div class="mine" id="mine"></div>
+      <div class="seg" id="seg"></div>
+      <div class="tags" id="tags"></div>
+    </div>
+  </div>
+  <div class="wrap list" id="list"></div>
+</div>
+
+<script>
+const CATS=[
+["Go'sht va baliq",[["mol","Mol go'shti","🥩"],["qoy","Qo'y go'shti","🍖"],["tovuq","Tovuq","🍗"],["qiyma","Qiyma","🥩"],["kolbasa","Kolbasa","🌭"],["baliq","Baliq","🐟"],["jigar","Jigar","🍖"]]],
+["Sabzavotlar",[["kartoshka","Kartoshka","🥔"],["piyoz","Piyoz","🧅"],["sabzi","Sabzi","🥕"],["pomidor","Pomidor","🍅"],["bodring","Bodring","🥒"],["bulgar","Bolgar qalampiri","🫑"],["baqlajon","Baqlajon","🍆"],["sarimsoq","Sarimsoq","🧄"],["karam","Karam","🥬"],["qovoq","Qovoq","🎃"],["lavlagi","Lavlagi","🔴"],["kabachok","Kabachok","🟢"],["qoziqorin","Qo'ziqorin","🍄"],["makka","Makkajo'xori","🌽"],["noxat","Yashil no'xat","🟢"],["achchiq","Achchiq qalampir","🌶️"]]],
+["Ko'katlar",[["shivit","Shivit","🌿"],["kashnich","Kashnich","🌿"],["petrushka","Petrushka","🌿"],["rayhon","Rayhon","🌿"],["yalpiz","Yalpiz","🌿"],["kopiyoz","Ko'k piyoz","🌱"]]],
+["Sut va tuxum",[["sut","Sut","🥛"],["qatiq","Qatiq","🥣"],["qaymoq","Qaymoq","🥄"],["tvorog","Tvorog","⚪"],["pishloq","Pishloq","🧀"],["saryog","Saryog'","🧈"],["tuxum","Tuxum","🥚"]]],
+["Don va un mahsulotlari",[["guruch","Guruch","🍚"],["un","Un","🌾"],["makaron","Makaron","🍝"],["vermishel","Vermishel","🍜"],["grechka","Grechka","🌰"],["nohut","Nohut","🟡"],["mosh","Mosh","🟢"],["yasmiq","Yasmiq","🟠"],["loviya","Loviya","🫘"],["suli","Suli yormasi","🥣"],["non","Non","🍞"],["lavash","Lavash","🫓"]]],
+["Shirin va boshqalar",[["shakar","Shakar","🍬"],["asal","Asal","🍯"],["limon","Limon","🍋"],["olma","Olma","🍎"],["banan","Banan","🍌"],["quruqmeva","Quruq meva","🍇"],["yongoq","Yong'oq","🥜"],["tomat","Tomat pastasi","🥫"],["mayonez","Mayonez","🫙"]]],
+["Ziravorlar",[["zira","Zira","🧂"],["murch","Qora murch","🌶️"],["zarchava","Zarchava","🧂"],["dolchin","Dolchin","🧂"],["lavr","Lavr bargi","🍃"]]]
+];
+const D=[
+["Osh (palov)",90,"Milliy","guruch,sabzi,piyoz,mol|qoy","zira,sarimsoq,nohut,quruqmeva","Qozonda yog'ni qizdirib, go'sht va piyozni qizarguncha qovuring.~Cho'p shaklida to'g'ralgan sabzini qo'shib, 10 daqiqa qovuring.~Tuz, zira va issiq suv qo'shib, 30 daqiqa past olovda zirvak qaynating.~Yuvilgan guruchni tekis yoyib, suv guruchdan 1 barmoq yuqori bo'lsin.~Suv shimilgach, o'rtasiga sarimsoq qo'yib, qopqoqni yopib 25 daqiqa damlang."],
+["Lag'mon",80,"Milliy","un,mol|qoy,piyoz,sabzi,bulgar,pomidor","kartoshka,sarimsoq,kashnich,achchiq","Un, suv va tuzdan qattiq xamir qorib, 30 daqiqa dam bering.~Xamirni yupqa yoyib, uzun lag'mon qilib cho'zing yoki to'g'rang.~Go'sht va piyozni qovuring, sabzi, bulg'or va pomidorni qo'shib, suv bilan 40 daqiqa dimlang.~Lag'monni qaynoq suvda 5-7 daqiqa pishirib, sho'rva bilan torting."],
+["Manti",90,"Milliy","un,qiyma|qoy|mol,piyoz","qovoq,zira,murch","Un, suv va tuzdan xamir qorib, 20 daqiqa dam bering.~Qiymaga mayda to'g'ralgan piyoz, tuz va zira qo'shib aralashtiring.~Xamirni kvadrat qilib kesing, ichiga masalliq solib tugib chiqing.~Bug'da 40-45 daqiqa pishiring."],
+["Somsa",80,"Milliy","un,mol|qoy|qiyma,piyoz","zira,saryog,tuxum","Un, suv, tuz va saryog'dan qatlamli xamir tayyorlang.~Go'sht va piyozni mayda to'g'rab, tuz va zira bilan aralashtiring.~Xamirni yoyib, masalliqni solib, uchburchak qilib buking.~Ustiga tuxum sarig'ini surtib, 200°C da 30-35 daqiqa pishiring."],
+["Shurva",90,"Sho'rva","mol|qoy,kartoshka,sabzi,piyoz,pomidor","bulgar,shivit,kashnich,zira","Go'shtni yirik bo'laklab, piyoz bilan qozonda qovuring.~Suv quyib, ko'pigini olib, 1 soat past olovda qaynating.~Yirik to'g'ralgan sabzi, kartoshka, pomidor va bulg'orni qo'shing.~Tayyor bo'lgach, ustiga shivit seping."],
+["Mastava",70,"Sho'rva","guruch,mol|qoy,sabzi,piyoz,pomidor,kartoshka","qatiq,shivit,sarimsoq","Go'sht va piyozni qovurib, sabzi va pomidorni qo'shing.~Suv quyib, 30 daqiqa qaynating.~Kartoshka va yuvilgan guruchni solib, 20 daqiqa pishiring.~Qatiq va shivit bilan torting."],
+["Dimlama",80,"Milliy","mol|qoy,kartoshka,piyoz,sabzi,pomidor","karam,bulgar,baqlajon,sarimsoq","Qozon tubiga yog' va halqa qilib to'g'ralgan piyozni yoying.~Ustiga go'sht, so'ng sabzi, kartoshka, pomidor va boshqa sabzavotlarni qatlam-qatlam joylang.~Tuz, murch sepib, ozgina suv qo'shing.~Qopqoqni yopib, aralashtirmasdan past olovda 1-1,5 soat damlang."],
+["Chuchvara",70,"Milliy","un,qiyma,piyoz","tuxum,qatiq,murch","Tuxum va suv bilan qattiq xamir qoring, 20 daqiqa dam bering.~Qiymaga mayda piyoz, tuz va murch qo'shing.~Xamirni yupqa yoyib, kichik kvadratlarga bo'ling, masalliq solib tuging.~Qaynoq tuzli suvda suzib chiqquncha 7-8 daqiqa pishiring."],
+["Norin",70,"Milliy","un,mol|qoy,piyoz","murch,zira","Go'shtni tuzlab, yumshaguncha qaynating.~Un va suvdan xamir qorib, juda yupqa yoyib, rombga kesing va qaynatib oling.~Go'shtni ingichka to'g'rang, piyozni dimlang.~Xamirni go'sht bilan aralashtirib, shurva bilan torting."],
+["Do'lma",80,"Milliy","qiyma,guruch,piyoz,bulgar","pomidor,tomat,kashnich,shivit","Bulg'orning urug'ini olib, ichini bo'shating.~Qiyma, yuvilgan guruch, mayda piyoz, tuz va ko'katni aralashtiring.~Bulg'orlarga to'ldirib, qozonga tik joylang.~Pomidor sousi yoki suv quyib, 40-50 daqiqa past olovda pishiring."],
+["Qozon kabob",60,"Milliy","mol|qoy,kartoshka,piyoz","zira,sarimsoq,kashnich","Go'shtni qozonda qizdirilgan yog'da har tomonini qovuring.~Piyozni qo'shib, yumshaguncha qovuring, tuz va zira soling.~Kartoshkani yirik bo'lib qo'shing.~Qopqoq ostida 25-30 daqiqa yumshaguncha pishiring."],
+["Moshkichiri",60,"Milliy","guruch,mosh,piyoz,sabzi","mol,qoy,qatiq,zira","Piyoz va sabzini qovuring.~Yuvilgan mosh va suv qo'shib, 20 daqiqa qaynating.~Guruchni solib, tuz va zira qo'shing.~Suv shimilguncha past olovda 25 daqiqa pishiring, qatiq bilan torting."],
+["Moshxo'rda",60,"Sho'rva","mosh,kartoshka,piyoz,mol|qoy","qatiq,shivit,sabzi","Go'shtni suvda 40 daqiqa qaynating.~Mosh va kartoshkani solib, 25 daqiqa pishiring.~Qovurilgan piyozni qo'shing.~Qatiq va shivit bilan torting."],
+["Tovuq kabob",50,"Asosiy","tovuq,piyoz","limon,sarimsoq,qatiq,murch,zira","Tovuqni bo'laklab, piyoz sharbati, tuz, murch va qatiq bilan 2 soat marinadlang.~Shishga tizing yoki pechga qo'ying.~Har tomonini 20-25 daqiqa pishiring.~Limon siqib torting."],
+["Qovurilgan baliq",25,"Asosiy","baliq,un","limon,sarimsoq,murch","Baliqni bo'laklab, tuz va murch bilan ishqalang.~Unda aylantiring.~Qizigan yog'da har tomonini 4-5 daqiqa qovuring.~Limon siqib torting."],
+["Achichuk",5,"Salat","pomidor,piyoz","achchiq,rayhon,kashnich","Pomidor va piyozni yupqa to'g'rang.~Tuz sepib, 5 daqiqa qo'ying.~Rayhon va achchiq qalampir qo'shib aralashtiring."],
+["Bodring va pomidor salat",5,"Salat","bodring,pomidor","piyoz,shivit,qaymoq,kopiyoz","Sabzavotlarni bo'laklab to'g'rang.~Ko'kat qo'shing.~Tuz va yog' yoki qaymoq bilan aralashtiring."],
+["Baqlajon ikra",40,"Gazak","baqlajon,piyoz,pomidor,sarimsoq","kashnich,achchiq","Baqlajonni pechda yoki olovda yumshaguncha pishirib, terisini oling.~Piyoz va pomidorni qovuring.~Baqlajonni maydalab qo'shib, 10 daqiqa dimlang.~Sarimsoq va ko'kat bilan aralashtiring."],
+["Chalop",10,"Salat","qatiq,bodring","shivit,sarimsoq,yalpiz,kashnich","Qatiqni sovuq suv bilan suyultiring.~Bodring va ko'katni mayda to'g'rang.~Tuz va sarimsoq qo'shib aralashtiring, sovutib torting."],
+["Kartoshka pyure",30,"Asosiy","kartoshka,saryog|sut","sarimsoq","Kartoshkani tozalab, tuzli suvda yumshaguncha 20 daqiqa qaynating.~Suvini to'kib, ezing.~Issiq sut yoki saryog' qo'shib, silliq bo'lguncha aralashtiring."],
+["Qovurilgan kartoshka",30,"Asosiy","kartoshka,piyoz","sarimsoq,petrushka,qoziqorin","Kartoshkani yupqa to'g'rab, qizigan yog'da qovuring.~Piyoz qo'shib, tuz soling.~Qopqoq ostida yumshaguncha 10 daqiqa pishiring."],
+["Omlet",10,"Nonushta","tuxum,sut","pishloq,pomidor,kolbasa,kopiyoz","Tuxum, sut va tuzni ko'pirguncha aralashtiring.~Qizigan tovaga quying.~Past olovda qopqoq ostida 5-6 daqiqa pishiring."],
+["Shakshuka",20,"Nonushta","tuxum,pomidor,piyoz","bulgar,sarimsoq,achchiq,zira","Piyozni qovuring, to'g'ralgan pomidor va bulg'orni qo'shing.~Sous quyuqlashguncha 10 daqiqa dimlang.~Ichida chuqurcha qilib, tuxumlarni sindiring.~Qopqoq ostida 5 daqiqa pishiring."],
+["Blinlar",25,"Nonushta","un,tuxum,sut","shakar,asal,qaymoq,tvorog","Tuxum, sut, un, tuz va shakarni sinchkov aralashtirib, suyuq xamir qiling.~Qizigan tovaga yupqa quying.~Har tomonini 1 daqiqadan qovuring."],
+["Qatiqli oladi",20,"Nonushta","un,qatiq,tuxum","shakar,quruqmeva,asal","Qatiq, tuxum va shakarni aralashtiring.~Un qo'shib, quyuq xamir qiling.~Qizigan yog'da har tomonini 2-3 daqiqa qovuring."],
+["Sirniki",25,"Nonushta","tvorog,tuxum,un","shakar,quruqmeva,qaymoq","Tvorogni tuxum, un va shakar bilan aralashtiring.~Yumaloq shakl berib, unda aylantiring.~Har tomonini 3 daqiqadan qovuring."],
+["Pishloqli makaron",15,"Asosiy","makaron,pishloq","saryog,sarimsoq,murch","Makaronni tuzli suvda pishiring.~Suvini to'kib, saryog' qo'shing.~Ustiga ishqalangan pishloq seping, eriguncha aralashtiring."],
+["Makaron bolonez",40,"Asosiy","makaron,qiyma,piyoz,pomidor|tomat","sarimsoq,pishloq,lavr","Piyozni qovurib, qiyma qo'shing va 10 daqiqa pishiring.~Pomidor yoki tomat pastasini solib, 20 daqiqa dimlang.~Makaronni alohida qaynating.~Sous bilan aralashtirib, pishloq seping."],
+["Grechka go'sht bilan",40,"Asosiy","grechka,mol|tovuq|qiyma,piyoz,sabzi","sarimsoq,lavr","Go'sht, piyoz va sabzini qovuring.~Yuvilgan grechkani qo'shing.~Ikki barobar suv quyib, tuz soling.~Qopqoq ostida past olovda 20 daqiqa pishiring."],
+["Tovuq sho'rva",50,"Sho'rva","tovuq,kartoshka,sabzi,piyoz","vermishel,shivit,lavr,petrushka","Tovuqni suvga solib, 30 daqiqa qaynating.~Sabzi va piyozni qo'shing.~Kartoshkani solib, yana 15 daqiqa pishiring.~Ko'kat bilan torting."],
+["Vermishelli sho'rva",30,"Sho'rva","vermishel,kartoshka,sabzi,piyoz","tovuq,mol,shivit","Piyoz va sabzini qovuring.~Suv quyib, kartoshkani solib, 15 daqiqa qaynating.~Vermishelni qo'shib, 5 daqiqa pishiring."],
+["Borsh",90,"Sho'rva","mol,lavlagi,karam,kartoshka,sabzi,piyoz","qaymoq,tomat,sarimsoq,lavr","Go'shtdan 1 soat sho'rva qaynating.~Lavlagi, sabzi va piyozni qovurib, tomat qo'shing.~Sho'rvaga kartoshka, so'ng karam va qovurmani soling.~15 daqiqa pishirib, qaymoq bilan torting."],
+["Yasmiq sho'rva",35,"Sho'rva","yasmiq,sabzi,piyoz,kartoshka","limon,zira,sarimsoq","Piyoz va sabzini qovuring.~Yuvilgan yasmiq, kartoshka va suv qo'shing.~25 daqiqa pishirib, blender bilan ezing yoki shundayligicha qoldiring.~Limon siqib torting."],
+["Xummus",15,"Gazak","nohut,limon,sarimsoq","zira,yongoq,achchiq","Pishgan nohutni blenderga soling.~Limon sharbati, sarimsoq, tuz, zira va ozgina yog' qo'shing.~Silliq bo'lguncha ezing."],
+["Loviyali sho'rva",60,"Sho'rva","loviya,kartoshka,piyoz,sabzi,pomidor|tomat","mol,lavr,shivit","Loviyani kechasi bilan ivitib, 40 daqiqa qaynating.~Piyoz, sabzi va pomidorni qovuring.~Qovurmani va kartoshkani qo'shib, 20 daqiqa pishiring."],
+["Qovoqli krem-sho'rva",35,"Sho'rva","qovoq,piyoz,sut|qaymoq","sarimsoq,saryog,murch","Piyozni saryog'da qovuring.~To'g'ralgan qovoq va suv qo'shib, 20 daqiqa pishiring.~Blenderda ezib, sut yoki qaymoq qo'shing, qaynatib torting."],
+["Sutli guruch bo'tqa",35,"Nonushta","guruch,sut","qovoq,saryog,shakar,dolchin","Guruchni yuvib, ozgina suvda 10 daqiqa pishiring.~Sut qo'shib, tez-tez aralashtirib 20 daqiqa qaynating.~Shakar va saryog' bilan torting."],
+["Suli bo'tqa",10,"Nonushta","suli","sut,banan,asal,yongoq,quruqmeva","Suli yormasini sut yoki suvda 5-7 daqiqa qaynating.~Ustiga banan, asal va yong'oq qo'shing."],
+["Banan smuzi",5,"Ichimlik","banan,sut|qatiq","asal,suli,yongoq","Bananni bo'laklab blenderga soling.~Sut yoki qatiq qo'shing.~Silliq bo'lguncha ezing."],
+["Sharlotka",55,"Shirinlik","olma,un,tuxum,shakar","dolchin,limon","Tuxum va shakarni ko'pirguncha uring.~Un qo'shib, aralashtiring.~Olmani to'g'rab, qolipga yoying va xamir quying.~180°C da 35-40 daqiqa pishiring."],
+["Kabachok oladi",25,"Gazak","kabachok,un,tuxum","sarimsoq,qatiq,shivit","Kabachokni ishqalab, suvini siqing.~Tuxum, un va tuz qo'shing.~Qizigan yog'da qoshiqlab, har tomonini 3 daqiqa qovuring."],
+["Sabzavotli ragu",45,"Asosiy","kabachok|baqlajon,pomidor,piyoz,bulgar","kartoshka,sarimsoq,petrushka","Piyozni qovuring.~Sabzavotlarni kubik qilib to'g'rab qo'shing.~Pomidor soling, tuz va ziravor qo'shing.~Qopqoq ostida 25-30 daqiqa dimlang."],
+["Qo'ziqorinli julyen",35,"Asosiy","qoziqorin,qaymoq,pishloq,piyoz","tovuq,saryog","Piyoz va qo'ziqorinni qovuring.~Qaymoq qo'shib, 5 daqiqa qaynating.~Idishlarga solib, ustiga pishloq seping.~200°C da 10-15 daqiqa pishiring."],
+["Qo'ziqorin va kartoshka",35,"Asosiy","qoziqorin,kartoshka,piyoz","qaymoq,petrushka","Kartoshkani qovuring.~Alohida piyoz va qo'ziqorinni qovuring.~Birlashtirib, 5-7 daqiqa dimlang."],
+["Kotlet",40,"Asosiy","qiyma,piyoz,tuxum,non|un","sarimsoq,petrushka","Qiymaga ishqalangan piyoz, tuxum, tuz va ivitilgan non yoki un qo'shing.~Yaxshilab aralashtirib, kotlet shakl bering.~Har tomonini 5-6 daqiqa qovuring."],
+["Pishloqli tovuq",45,"Asosiy","tovuq,pishloq,pomidor","sarimsoq,mayonez,rayhon","Tovuq filesini tuz va ziravor bilan ishqalang.~Ustiga pomidor halqalarini qo'ying.~Pishloq seping.~190°C da 30 daqiqa pishiring."],
+["Lavash pitsa",20,"Gazak","lavash,pishloq,pomidor|tomat,kolbasa","bulgar,qoziqorin,rayhon","Lavashga pomidor yoki tomat suring.~Kolbasa va boshqa mahsulotlarni yoying.~Pishloq seping.~200°C da 8-10 daqiqa pishiring."],
+["Issiq buterbrod",10,"Gazak","non,pishloq,kolbasa|pomidor","saryog,kopiyoz","Nonni bo'laklab, saryog' suring.~Kolbasa yoki pomidor qo'ying.~Pishloq seping va pechda yoki tovada eritib oling."],
+["Frantsuz tosti",10,"Nonushta","non,tuxum,sut","shakar,asal,dolchin,banan","Tuxum va sutni aralashtiring.~Non bo'laklarini unga botiring.~Qizigan tovada har tomonini 2 daqiqadan qovuring."],
+["Kartoshka zapekanka",55,"Asosiy","kartoshka,qiyma,pishloq,piyoz","qaymoq,sarimsoq,murch","Kartoshkani yupqa to'g'rab, yarim pishguncha qaynating.~Piyoz bilan qiymani qovuring.~Qatlam-qatlam joylab, ustiga pishloq seping.~190°C da 25-30 daqiqa pishiring."],
+["Tovuq qovurma kartoshka bilan",50,"Asosiy","tovuq,kartoshka,piyoz","sarimsoq,murch,zira","Tovuqni bo'laklab, qizigan yog'da qovuring.~Piyozni qo'shing.~Kartoshkani yirik to'g'rab solib, tuz va ziravor qo'shing.~Qopqoq ostida 25 daqiqa pishiring."],
+["Tovuqli palov",60,"Asosiy","tovuq,guruch,piyoz,sabzi","zira,sarimsoq","Tovuq va piyozni qozonda qovuring.~Sabzini qo'shib, 10 daqiqa qovuring.~Tuz, zira va suv qo'shib, 15 daqiqa dimlang.~Guruch solib, suv shimilguncha pishiring."],
+["Nohut sho'rva",70,"Sho'rva","nohut,mol|qoy,kartoshka,piyoz","sabzi,pomidor,shivit","Nohutni kechasi bilan ivitib qo'ying.~Go'sht, nohut va suvni 1 soat qaynating.~Piyoz, sabzi va kartoshkani qo'shib, 20 daqiqa pishiring."],
+["Tuxumli qovurma guruch",25,"Asosiy","guruch,tuxum,sabzi,noxat|makka","kopiyoz,sarimsoq","Guruchni oldindan pishirib, sovuting.~Sabzi va no'xatni qovuring.~Guruchni qo'shib, 3 daqiqa qovuring.~Chetga surib, tuxumni qovuring va aralashtiring."],
+["Olivye salat",40,"Salat","kartoshka,sabzi,tuxum,kolbasa,noxat,mayonez","bodring,piyoz,petrushka","Kartoshka, sabzi va tuxumni qaynatib, sovuting.~Hammasini kubik qilib to'g'rang.~No'xat va mayonez qo'shib aralashtiring."],
+["Lavlagi va sabzi salat",15,"Salat","lavlagi,sabzi","sarimsoq,mayonez,yongoq,quruqmeva","Lavlagi va sabzini qaynatib yoki xom ishqalang.~Sarimsoq va tuz qo'shing.~Yog' yoki mayonez bilan aralashtiring."],
+["Karam salat",10,"Salat","karam,sabzi","limon,bodring,kopiyoz,shivit","Karamni ingichka to'g'rab, tuz sepib ezing.~Sabzini ishqalab qo'shing.~Yog' va limon sharbati bilan aralashtiring."],
+["Pechda baliq kartoshka bilan",45,"Asosiy","baliq,kartoshka,piyoz","limon,pishloq,qaymoq,petrushka","Kartoshka va piyozni yupqa to'g'rab, qolipga yoying.~Ustiga tuzlangan baliqni qo'ying.~Qaymoq yoki limon sharbati qo'shing.~200°C da 30-35 daqiqa pishiring."],
+["Jigar qovurma",25,"Asosiy","jigar,piyoz","qaymoq,sarimsoq,murch","Jigarni bo'laklab, tez qovuring.~Piyoz qo'shib, yumshaguncha pishiring.~Tuz soling, xohlasangiz qaymoq quying."],
+["Qovoq shirin",40,"Shirinlik","qovoq,shakar","yongoq,dolchin,saryog,asal","Qovoqni bo'laklab, qolipga joylang.~Shakar seping va ozgina suv quying.~Pechda 180°C da 30 daqiqa yumshaguncha pishiring."],
+["Limonli asalli ichimlik",5,"Ichimlik","limon,asal","yalpiz,dolchin","Limonni halqa qilib kesing.~Issiq (qaynoq emas) suvga asal va limon soling.~Aralashtirib torting."],
+["Quruq meva kompoti",30,"Ichimlik","quruqmeva,shakar","olma,limon,dolchin","Quruq mevalarni yaxshilab yuving.~Suvda 15 daqiqa qaynating.~Shakar va olma qo'shib, yana 10 daqiqa pishiring, sovutib torting."]
+];
+/*END-DATA*/
+
+const ING={}, CAT_OF={};
+CATS.forEach(([cn,items],ci)=>items.forEach(([id,n,e])=>{ING[id]={n,e};CAT_OF[id]=ci;}));
+const DISHES=D.map((d,i)=>({id:i,name:d[0],min:d[1],tag:d[2],need:d[3].split(","),opt:d[4]?d[4].split(","):[],steps:d[5].split("~")}));
+const norm=s=>s.toLowerCase().replace(/[ʻʼ’‘`]/g,"'");
+const $=id=>document.getElementById(id);
+let sel=new Set(), tab="all", tag="Hammasi", open=new Set();
+try{const s=JSON.parse(localStorage.getItem("np-sel")||"[]");if(Array.isArray(s))s.forEach(x=>{if(ING[x])sel.add(x)});}catch(e){}
+function save(){try{localStorage.setItem("np-sel",JSON.stringify([...sel]))}catch(e){}}
+
+function evalDish(d){
+  const have=[],miss=[];
+  d.need.forEach(r=>{const a=r.split("|");const hit=a.find(x=>sel.has(x));hit?have.push(hit):miss.push(a)});
+  return {d,have,miss,ratio:have.length/d.need.length};
+}
+function matches(){
+  const out=[];
+  DISHES.forEach(d=>{const m=evalDish(d);if(m.have.length>=1&&m.miss.length<=2&&m.ratio>=0.5)out.push(m)});
+  out.sort((a,b)=>(a.miss.length-b.miss.length)||(b.d.need.length-a.d.need.length)||a.d.name.localeCompare(b.d.name));
+  return out;
+}
+
+/* picker */
+function buildPicker(){
+  const nav=$("nav"), cats=$("cats");
+  CATS.forEach(([cn,items],ci)=>{
+    const b=document.createElement("button");b.type="button";b.className="navbtn";b.textContent=cn;
+    b.onclick=()=>{const s=$("sec"+ci);if(s&&!s.hidden)s.scrollIntoView({block:"start"})};nav.appendChild(b);
+    const sec=document.createElement("section");sec.className="sec";sec.id="sec"+ci;
+    sec.innerHTML='<h2><span>'+cn+'</span><small id="sc'+ci+'"></small></h2><div class="chips" id="ch'+ci+'"></div>';
+    cats.appendChild(sec);
+    const box=sec.querySelector(".chips");
+    items.forEach(([id,n,e])=>{
+      const c=document.createElement("button");c.type="button";c.className="chip";c.dataset.id=id;c.dataset.n=norm(n);
+      c.setAttribute("aria-pressed",sel.has(id));
+      c.innerHTML='<span class="em" aria-hidden="true">'+e+'</span><span>'+n+'</span>';
+      c.onclick=()=>{sel.has(id)?sel.delete(id):sel.add(id);c.setAttribute("aria-pressed",sel.has(id));save();refresh();};
+      box.appendChild(c);
+    });
+  });
+  const em=document.createElement("p");em.className="empty";em.id="noMatch";em.hidden=true;em.textContent="Bunday mahsulot topilmadi.";cats.appendChild(em);
+}
+function refresh(){
+  const n=sel.size;
+  CATS.forEach(([cn,items],ci)=>{
+    const k=items.filter(x=>sel.has(x[0])).length;
+    $("sc"+ci).textContent=k?k+" ta tanlandi":items.length+" ta";
+  });
+  const ms=matches();
+  $("cnt").textContent=n?n+" ta mahsulot · "+ms.length+" ta ovqat":"Hech narsa tanlanmagan";
+  $("clear").hidden=!n;
+  $("go").disabled=!n;
+}
+$("q").addEventListener("input",e=>{
+  const q=norm(e.target.value.trim());let any=false;
+  CATS.forEach(([cn,items],ci)=>{
+    let vis=0;
+    document.querySelectorAll("#ch"+ci+" .chip").forEach(c=>{const show=!q||c.dataset.n.includes(q);c.hidden=!show;if(show)vis++});
+    $("sec"+ci).hidden=!vis;if(vis)any=true;
+  });
+  $("noMatch").hidden=any;
+});
+$("clear").onclick=()=>{sel.clear();document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));save();refresh();};
+
+/* results */
+function show(v){
+  $("pick").hidden=v!=="pick";$("results").hidden=v!=="results";
+  window.scrollTo({top:0,behavior:"auto"});
+}
+$("go").onclick=()=>{tab="all";tag="Hammasi";renderResults();show("results");};
+$("back").onclick=()=>show("pick");
+function names(ids){return ids.map(i=>ING[i].n)}
+function renderResults(){
+  const all=matches();
+  const ready=all.filter(m=>m.miss.length===0), near=all.filter(m=>m.miss.length>0);
+  $("rtitle").textContent=ready.length?ready.length+" ta ovqatni hozir pishirasiz":"Hozircha to'liq ovqat yo'q";
+  $("mine").innerHTML=[...sel].map(i=>"<span>"+ING[i].n+"</span>").join("");
+  $("seg").innerHTML=[["all","Hammasi",all.length],["ready","Tayyor",ready.length],["near","Yaqin",near.length]]
+    .map(([k,l,c])=>'<button type="button" data-k="'+k+'" aria-pressed="'+(tab===k)+'">'+l+'<span>'+c+'</span></button>').join("");
+  $("seg").querySelectorAll("button").forEach(b=>b.onclick=()=>{tab=b.dataset.k;renderResults();});
+  let pool=tab==="ready"?ready:tab==="near"?near:all;
+  const tags=["Hammasi",...new Set(pool.map(m=>m.d.tag))];
+  if(!tags.includes(tag))tag="Hammasi";
+  $("tags").innerHTML=tags.map(t=>'<button type="button" class="tag" aria-pressed="'+(tag===t)+'">'+t+'</button>').join("");
+  $("tags").querySelectorAll("button").forEach(b=>b.onclick=()=>{tag=b.textContent;renderResults();});
+  if(tag!=="Hammasi")pool=pool.filter(m=>m.d.tag===tag);
+  const list=$("list");
+  if(!pool.length){
+    list.innerHTML='<p class="empty">Bu bo\'limda ovqat yo\'q. Orqaga qaytib, yana mahsulot belgilang.</p>';return;
+  }
+  list.innerHTML=pool.map(card).join("")+'<p class="hint">Ko\'proq mahsulot belgilasangiz, ovqatlar soni ortadi.</p>';
+  list.querySelectorAll(".dhead").forEach(h=>h.onclick=()=>{
+    const id=+h.dataset.id,body=h.nextElementSibling,o=h.getAttribute("aria-expanded")==="true";
+    h.setAttribute("aria-expanded",!o);body.hidden=o;o?open.delete(id):open.add(id);
+  });
+}
+function card(m){
+  const d=m.d,n=d.need.length,h=m.have.length,full=m.miss.length===0,isOpen=open.has(d.id);
+  const pill=full?'<span class="pill ok">Hammasi bor</span>':'<span class="pill warn">'+m.miss.length+' ta yetmaydi</span>';
+  const haveC=m.have.map(i=>'<span class="ing have">✓ '+ING[i].n+'</span>').join("");
+  const missC=m.miss.map(a=>'<span class="ing miss">'+names(a).join(" yoki ")+'</span>').join("");
+  const optC=d.opt.map(i=>'<span class="ing '+(sel.has(i)?"have":"opt")+'">'+(sel.has(i)?"✓ ":"")+ING[i].n+'</span>').join("");
+  return '<article class="dish"><button type="button" class="dhead" data-id="'+d.id+'" aria-expanded="'+isOpen+'">'+
+    '<div class="drow"><h3 class="dname">'+d.name+'</h3>'+pill+'</div>'+
+    '<div class="meta"><span>'+d.min+' daqiqa</span><span>'+d.tag+'</span></div>'+
+    '<div class="meter"><div class="track"><div class="fill'+(full?" full":"")+'" style="width:'+Math.round(h/n*100)+'%"></div></div><span>'+h+'/'+n+' mahsulot</span><span class="chev" aria-hidden="true">▾</span></div>'+
+    '</button><div class="dbody"'+(isOpen?"":" hidden")+'>'+
+    '<div><h4>Kerakli mahsulotlar</h4><div class="ings">'+haveC+missC+'</div></div>'+
+    (optC?'<div><h4>Ixtiyoriy</h4><div class="ings">'+optC+'</div></div>':'')+
+    '<div><h4>Tayyorlanishi</h4><ol class="steps">'+d.steps.map(s=>'<li><span>'+s+'</span></li>').join("")+'</ol></div>'+
+    '</div></article>';
+}
+
+buildPicker();refresh();
+</script>
+
+</body></html>
